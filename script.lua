@@ -1,13 +1,24 @@
 --[[
-    @Projet: Kinto Panel - Ultimate Cyber Edition (Prêt pour GitHub)
-    @Auteur: Kinto Team
+    @Projet: Kinto Panel - Ultimate Cyber Edition
 ]]
 
 local success, Fluent = pcall(function()
-    return loadstring(game:HttpGet("https://raw.githubusercontent.com/violin-suzutsuki/Fluent/main/Fluent.lua"))()
+    return loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Fluent.lua"))()
 end)
 
 if not success or not Fluent then
+    -- Second essai avec un autre lien miroir au cas où
+    success, Fluent = pcall(function()
+        return loadstring(game:HttpGet("https://github.com/violin-suzutsuki/Fluent/raw/main/Fluent.lua"))()
+    end)
+end
+
+if not success or not Fluent then
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Kinto Erreur",
+        Text = "Impossible de charger la librairie Fluent !",
+        Duration = 5
+    })
     return
 end
 
