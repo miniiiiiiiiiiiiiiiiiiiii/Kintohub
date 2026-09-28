@@ -1,17 +1,28 @@
 --[[
-    @Projet: Kinto Panel - Ultimate Cyber Edition
+    @Projet: Kinto Panel - Ultimate Cyber Edition (Fixé)
 ]]
 
+local HttpGet = game.HttpGet
 local success, Fluent = pcall(function()
-    return loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Fluent.lua"))()
+    return loadstring(game:HttpGet(game, "https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Fluent.lua"))()
 end)
 
 if not success or not Fluent then
-    game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "Kinto Erreur",
-        Text = "Impossible de charger la librairie Fluent !",
-        Duration = 5
-    })
+    -- Second essai avec une requête alternative si game:HttpGet est restreint
+    local req = (syn and syn.request) or (http and http.request) or http_request or request
+    if req then
+        local res = req({Url = "https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Fluent.lua", Method = "GET"})
+        if res and res.Body then
+            local fn, err = loadstring(res.Body)
+            if fn then
+                Fluent = fn()
+            end
+        end
+    end
+end
+
+if not Fluent then
+    warn("[Kinto Error] Impossible de charger Fluent. Ton exécuteur bloque la requête HTTP.")
     return
 end
 
